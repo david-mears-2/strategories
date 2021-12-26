@@ -13,3 +13,24 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  background-color: lightskyblue;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: navy;
+}
+
+#auth-div {
+  margin-top: 10px;
+  background-color: paleturquoise;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+a {
+  color: darkblue;
+}
+
+a:visited {
+  color: rebeccapurple;
+}

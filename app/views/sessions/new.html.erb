@@ -1,0 +1,29 @@
+<h1>Sign in!</h1>
+
+<%= form_with model: @sign_in_form, url: create_session_path do |form| %>
+  <% if @sign_in_form.errors.any? %>
+    <div style="color: red">
+    <h2><%= pluralize(@sign_in_form.errors.count, "error") %> prevented signing in:</h2>
+    <ul>
+        <% @sign_in_form.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+        <% end %>
+    </ul>
+      </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+<br>
+
+<div>
+  <p>Or <%= link_to "sign up", new_user_path %></p>
+  <%= link_to "To games", games_path %>
+</div>

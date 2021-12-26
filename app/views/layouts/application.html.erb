@@ -11,6 +11,14 @@
   </head>
 
   <body>
+    <div id="auth-div">
+      <% if current_user.present? %>
+        <p>Player: <b><%= link_to current_user.name, user_path(current_user) %></b> | Points: <%= current_user.points %></b></p>
+        <%= button_to "Sign out", destroy_session_path, method: :delete %>
+      <% else %>
+        <%= link_to "Sign in", new_session_path %>
+      <% end %>
+    </div>
     <%= yield %>
   </body>
 </html>

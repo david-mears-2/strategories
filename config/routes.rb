@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
+# https://guides.rubyonrails.org/routing.html
+
 Rails.application.routes.draw do
   resources :games
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :users
 
-  # Defines the root path route ("/")
-  root "pages#home"
+  get "sign-in", to: "sessions#new", as: :new_session
+  post "sign-in", to: "sessions#create", as: :create_session
+  delete "sign-out", to: "sessions#destroy", as: :destroy_session
+  root "games#index"
 end

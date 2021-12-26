@@ -1,0 +1,10 @@
+<h1>Create an account</h1>
+
+<%= render "form", user: @user %>
+
+<br>
+
+<div>
+  <p>Already got one? <%= link_to "Sign in", new_session_path %></p>
+  <%= link_to "To games", games_path %>
+</div>

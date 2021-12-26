@@ -30,4 +30,14 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  helpers:
+    submit:
+      create: "Let's goooo"
+  activemodel:
+    errors:
+      models:
+        sign_in_form:
+          attributes:
+            user:
+              blank: "by that name could not be found. Did you mean to sign up?"
+            

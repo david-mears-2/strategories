@@ -3,6 +3,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[show edit update destroy]
   before_action :require_authentication, only: %i[edit update destroy]
+  before_action :require_authorization, only: %i[edit update destroy] 
 
   def show; end
 
@@ -32,8 +33,6 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    raise "Only delete your own account" unless @user == current_user
-
     @user.destroy
     session.destroy
 
@@ -48,5 +47,11 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name)
+  end
+
+  def require_authorization
+    return if @user == current_user
+
+    redirect_to user_path(@user), alert: "You aren't authorized to do that", status: :unprocessable_entity
   end
 end

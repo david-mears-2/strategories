@@ -1,14 +1,13 @@
-<p style="color: green"><%= notice %></p>
+<h1>Strategorical</h1>
+<h3>An online version of <i>Listography</i></h3>
 
-<h1>Strategories</h1>
+<h2>Games</h2>
 
-<h2>Games:</h2>
+<%= button_to "New game", new_game_path, method: :get %>
 
 <div id="games">
   <% @games.each do |game| %>
-    <%= game.code %>: <%= link_to "play", game %>
+    <%= game.code %>: <%= button_to "play", game_join_path(game), method: :put, form: { style: "display: inline-block" } %>
     <br>
   <% end %>
 </div>
-<br>
-<%= link_to "New game", new_game_path %>

@@ -4,7 +4,11 @@
     <%= user.name %>
   </p>
   <p>
-    <strong>Points:</strong>
-    <%= user.points %>
+    <strong>Games played:</strong>
+    <%= user.participations.count %>
+  </p>
+  <p>
+    <strong>Total points across all games:</strong>
+    <%= user.points_from_all_games %>
   </p>
 </div>

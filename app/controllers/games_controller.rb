@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class GamesController < ApplicationController
-  before_action :authenticate
-  before_action :set_game, only: %i[show edit update destroy]
+  before_action :authenticate, except: %i[index]
+  before_action :set_game, only: %i[show edit join update destroy]
 
   def index
-    @games = Game.all
+    @games = Game.order(created_at: :desc).limit(10)
   end
 
   def show; end
@@ -15,6 +15,16 @@ class GamesController < ApplicationController
   end
 
   def edit; end
+
+  def join
+    participation = Participation.find_or_initialize_by(game: @game, user: current_user)
+
+    if participation.save
+      redirect_to game_path(@game)
+    else
+      redirect_to games_path, alert: "Couldn't join game."
+    end
+  end
 
   def create
     @game = Game.new(game_params)
@@ -43,7 +53,11 @@ class GamesController < ApplicationController
   private
 
   def set_game
-    @game = Game.find(params[:id])
+    @game = Game.find(game_id)
+  end
+
+  def game_id
+    params[:id] || params[:game_id]
   end
 
   def game_params

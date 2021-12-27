@@ -3,7 +3,10 @@
 # https://guides.rubyonrails.org/routing.html
 
 Rails.application.routes.draw do
-  resources :games
+  resources :games do
+    put "join", to: "games#join", as: :join
+  end
+
   resources :users
 
   get "sign-in", to: "sessions#new", as: :new_session

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class GamesController < ApplicationController
-  before_action :authenticate, except: %i[index]
+  before_action :require_authentication, except: %i[index]
   before_action :set_game, only: %i[show edit join update destroy]
 
   def index

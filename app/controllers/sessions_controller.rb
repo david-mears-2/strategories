@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     @user = @sign_in_form.user
     if @sign_in_form.valid?
       session[:user] = @user.id
-      redirect_to root_path, notice: "Welcome, friend."
+      redirect_to after_authentication_path, notice: "Welcome, friend."
     else
       render :new, status: :unprocessable_entity
     end

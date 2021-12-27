@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authenticate, only: %i[show edit update destroy]
   before_action :set_user, only: %i[show edit update destroy]
+  before_action :require_authentication, only: %i[edit update destroy]
 
   def show; end
 
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user] = @user.id
-      redirect_to root_path, notice: "Welcome, friend."
+      redirect_to after_authentication_path, notice: "Welcome, friend."
     else
       render :new, status: :unprocessable_entity
     end

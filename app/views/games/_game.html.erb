@@ -1,7 +1,12 @@
-<div id="<%= dom_id game %>">
-  <p>
-    <strong>Code:</strong>
-    <%= game.code %>
-  </p>
-
+<div>
+  Playing:
+  <% if game.users.any? %>
+    <ol>
+      <% game.users.each do |user| %>
+        <li><%= user.name %></li>
+      <% end %>
+    </ol>
+  <% else %>
+    noone yet!
+  <% end %>
 </div>

@@ -5,6 +5,12 @@
 
 <%= render @game %>
 
+<% unless @game.in_play? %>
+  <%= button_to "Start the game already!", game_start_path(@game), method: :put %>
+<% end %>
+
+<br>
+
 <div>
   <%= link_to "Back to games", games_path %>
 </div>

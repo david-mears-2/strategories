@@ -18,11 +18,7 @@ class ApplicationController < ActionController::Base
   end
 
   def store_before_authentication_request_path
-    if request.get?
-      session[:before_auth_request_path] = request.fullpath 
-    else
-      session[:before_auth_request_path] = nil
-    end
+    session[:before_auth_request_path] = (request.fullpath if request.get?)
   end
 
   def after_authentication_path

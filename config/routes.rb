@@ -3,8 +3,9 @@
 # https://guides.rubyonrails.org/routing.html
 
 Rails.application.routes.draw do
-  resources :games do
+  resources :games, except: %i[edit update] do
     put "join", to: "games#join", as: :join
+    put "start", to: "games#start", as: :start
   end
 
   resources :users

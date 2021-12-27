@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_27_224941) do
+ActiveRecord::Schema.define(version: 2021_12_27_234952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,16 @@ ActiveRecord::Schema.define(version: 2021_12_27_224941) do
     t.integer "status", default: 0
   end
 
+  create_table "lists", force: :cascade do |t|
+    t.bigint "round_id"
+    t.bigint "user_id"
+    t.integer "points"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["round_id"], name: "index_lists_on_round_id"
+    t.index ["user_id"], name: "index_lists_on_user_id"
+  end
+
   create_table "participations", force: :cascade do |t|
     t.bigint "game_id"
     t.bigint "user_id"
@@ -30,6 +40,24 @@ ActiveRecord::Schema.define(version: 2021_12_27_224941) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["game_id"], name: "index_participations_on_game_id"
     t.index ["user_id"], name: "index_participations_on_user_id"
+  end
+
+  create_table "rounds", force: :cascade do |t|
+    t.bigint "game_id"
+    t.bigint "rule_id"
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["game_id"], name: "index_rounds_on_game_id"
+    t.index ["rule_id"], name: "index_rounds_on_rule_id"
+  end
+
+  create_table "rules", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "max_entries_per_list"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -7,6 +7,6 @@ class User < ApplicationRecord
   has_many :games, through: :participations
 
   def points_from_all_games
-    @points ||= participations.sum(:points)
+    @points_from_all_games ||= participations.sum(:points)
   end
 end

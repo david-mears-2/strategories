@@ -6,8 +6,6 @@ AllCops:
     - "tmp/**/*"
     - "db/schema.rb"
     - "db/migrate/20*"
-    - "vendor/**/*"
-    - "node_modules/**/*"
 
 Style/Documentation:
   Enabled: false

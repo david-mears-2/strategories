@@ -66,6 +66,10 @@ group :development do
   gem "rubocop-rails"
   gem "rubocop-rspec"
 
+  # Installed in the hope of getting go-to-definition for gems
+  # https://github.com/castwide/solargraph/issues/87#issuecomment-505366440
+  gem "solargraph"
+
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   gem "spring"
 end

@@ -1,0 +1,17 @@
+# Keep rule info in here (converted to table record when server starts) for ease
+# editing and reference.
+- name: "one-on-one"
+  description: "Get a point for each word you write that was also written by exactly one other player."
+  max_entries_per_list: 10
+- name: "threeway"
+  description: "Get a point for each other player who writes the same word."
+  max_entries_per_list: 3
+- name: "forgotten four"
+  description: "Get a point for each word you write that was written by noone else."
+  max_entries_per_list: 4
+- name: "the underdog"
+  description: "Get a point if the word you wrote was the second most popular answer."
+  max_entries_per_list: 1
+- name: "herd mentality"
+  description: "Get a point if the word you wrote was the most popular answer."
+  max_entries_per_list: 1

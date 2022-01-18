@@ -1,5 +1,16 @@
 # README
 
+rbenv install <version>
+
+bundle install
+
+bundle exec rake db:create
+
+
+
+
+
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

@@ -1,4 +1,4 @@
-# Keep rule info in here (converted to table record when server starts) for ease
+# Keep rule info in here (converted to table record when seeds.rb is run) for ease of
 # editing and reference.
 - name: "one-on-one"
   description: "Get a point for each word you write that was also written by exactly one other player."

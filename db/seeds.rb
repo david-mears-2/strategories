@@ -6,3 +6,7 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+YAML.load_file(Rails.root.join("config/rules.yml")).each do |rule|
+  Rule.find_or_create_by(rule)
+end

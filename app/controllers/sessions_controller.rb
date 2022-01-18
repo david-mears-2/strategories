@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class SessionsController < ApplicationController
   def new
     @sign_in_form = SignInForm.new

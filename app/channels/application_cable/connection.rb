@@ -6,6 +6,10 @@ module ApplicationCable
       self.current_user = find_verified_user
     end
 
+    def disconnect
+      close(reason: nil, reconnect: true) # From https://dev.to/ethanmgustafson/rails-6-actioncable-navigation-turbolinks-2k67
+    end
+
     private
 
     def find_verified_user

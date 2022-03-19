@@ -6,12 +6,6 @@ bundle install
 
 bundle exec rake db:create
 
-# Plans
-
-Use ActionCable with Vue, on the not-that-confident assumption that Vue is better suited to something that, like a game, wants the game state all over the page, rather than encapsulated in little controllers that don't know about each other (recalling 2020 experience with Stimulus.)
-
-Continue following guide from this point: https://guides.rubyonrails.org/action_cable_overview.html#subscriber
-
 
 
 

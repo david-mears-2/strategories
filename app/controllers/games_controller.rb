@@ -1,15 +1,15 @@
 class GamesController < ApplicationController
   before_action :require_authentication, except: %i[index]
-  before_action :set_game, only: %i[show poll join leave start destroy]
+  before_action :set_game, only: %i[show poll join leave start destroy add_round]
+
+  helper_method :am_the_host?
 
   def index
     @games = Game.order(created_at: :desc).limit(10)
   end
 
   def poll
-    html = render_to_string("game", formats: [:html], locals: { game: @game }, layout: false)
-
-    render json: { html: html }
+    render_game
   end
 
   def new
@@ -23,8 +23,10 @@ class GamesController < ApplicationController
   def leave
     participation = Participation.find_by(game: @game, user: current_user)
 
+    @game.rotate_host if @game.host == current_user
+
     if participation.destroy
-      redirect_to games_path, success: "You left the game."
+      redirect_to games_path, notice: "You left the game."
     else
       redirect_to game_path(@game), alert: "Couldn't leave game", status: :unprocessable_entity
     end
@@ -52,6 +54,16 @@ class GamesController < ApplicationController
     redirect_to games_path, notice: "Game successfully destroyed."
   end
 
+  def add_round
+    verify_json_request
+
+    @game.rotate_host
+
+    round = @game.rounds.new.save
+
+    render_game
+  end
+
   private
 
   def set_game
@@ -74,5 +86,19 @@ class GamesController < ApplicationController
     else
       redirect_to games_path, alert: "Couldn't join game", status: :unprocessable_entity
     end
+  end
+
+  def am_the_host?
+    current_user == @game.host
+  end
+
+  def verify_json_request
+    not_found unless request.format.json?
+  end
+
+  def render_game
+    html = render_to_string("game", formats: [:html], locals: { game: @game }, layout: false)
+
+    render json: { html: html }
   end
 end

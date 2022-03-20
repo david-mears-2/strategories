@@ -3,7 +3,7 @@
   <%= @game.code %>
 </p>
 
-Playing:
+<p>Playing:</p>
 <% if game.players.any? %>
   <ol>
     <% game.players.each do |player| %>
@@ -16,14 +16,27 @@ Playing:
     <% end %>
   </ol>
 <% else %>
-  noone yet!
+  <p>noone yet!</p>
 <% end %>
 
-<% unless game.in_play? %>
-  <%= button_to "Start the game already!", game_start_path(game), method: :put %>
+<hr>
+
+<% if game.in_play? %>
+  <% if game.rounds.any? %>
+      <p>Round <%= game.rounds.count %></p>
+  <% end %>
+  <% if am_the_host? %>
+    <% if (game.rounds.none? || game.rounds.last.finished?) %>
+      <button data-action="game#addRound">New round</button>
+    <% elsif game.rounds.last.draft? %>
+      <button data-action="game#startRound">Start round</button>
+    <% end %>
+  <% end %>
 <% else %>
-  "The game"
+  <%= button_to "Start the game already!", game_start_path(game), method: :put %>
 <% end %>
+
+<hr>
 
 <% if current_user.in?(game.players) %>
   <%= button_to "Leave game", game_leave_path(game), method: :delete %>

@@ -10,7 +10,7 @@ export default class extends Controller {
         .then(response => {
           if (!response.ok) {
             console.log(response)
-            return { html: `<p>There was a bally error :-(</p><p>${response.statusText}</p>` }
+            return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
           } else {
             return response.json()
           }
@@ -18,6 +18,44 @@ export default class extends Controller {
         .then(data => {
           gameContainer.innerHTML = data.html;
         })
-      }, 1000);
+      }, 5000);
+  }
+
+  addRound(event) {
+    this.doAction('add_round', event)
+  }
+
+  startRound(event) {
+    this.doAction('start_round', event)
+  }
+
+  doAction(action, event) {
+    event.target.disabled = true;
+    const gameContainer = this.element
+
+    fetch(`/games/${gameContainer.dataset.gameId}/${action}.json`,
+      {
+        method: 'PUT',
+        credentials: "same-origin",
+        headers: {
+          "X-CSRF-Token": this.getMetaValue("csrf-token")
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.log(response)
+          return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
+        } else {
+          return response.json()
+        }
+      })
+      .then(data => {
+        gameContainer.innerHTML = data.html;
+      })
+  }
+
+  getMetaValue(name) {
+    const element = document.head.querySelector(`meta[name="${name}"]`)
+    return element.getAttribute("content")
   }
 }

@@ -12,5 +12,13 @@ class Game < ApplicationRecord
     users.order(:created_at)
   end
 
+  def rotate_host
+    current_host_index = players.index(host)
+
+    self.host = players[current_host_index + 1] || players.first
+
+    save
+  end
+
   enum status: %i[draft in_play finished]
 end

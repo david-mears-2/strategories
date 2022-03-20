@@ -67,7 +67,4 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-
-  # https://www.twilio.com/blog/2016/06/real-time-rails-4-using-server-sent-events-with-authy-onetouch.html
-  config.allow_concurrency = true
 end

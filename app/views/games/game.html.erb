@@ -1,0 +1,32 @@
+<p>
+  <strong>Code:</strong>
+  <%= @game.code %>
+</p>
+
+Playing:
+<% if game.players.any? %>
+  <ol>
+    <% game.players.each do |player| %>
+      <li>
+        <%= player.name %>
+        <% if player == game.host %>
+          <i class="fa-solid fa-crown"></i> 
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+<% else %>
+  noone yet!
+<% end %>
+
+<% unless game.in_play? %>
+  <%= button_to "Start the game already!", game_start_path(game), method: :put %>
+<% else %>
+  "The game"
+<% end %>
+
+<% if current_user.in?(game.players) %>
+  <%= button_to "Leave game", game_leave_path(game), method: :delete %>
+<% else %>
+  <%= button_to "Join game", game_join_path(game), method: :put %>
+<% end %>

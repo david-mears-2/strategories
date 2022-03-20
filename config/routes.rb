@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :games, except: %i[edit update] do
     put "join", to: "games#join", as: :join
     put "start", to: "games#start", as: :start
+    get "poll", to: "games#poll", as: :poll
+    delete "leave", to: "games#leave", as: :leave
   end
 
   resources :users

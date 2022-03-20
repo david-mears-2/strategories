@@ -1,13 +1,4 @@
-<p>
-  <strong>Code:</strong>
-  <%= @game.code %>
-</p>
-
-<%= render @game %>
-
-<% unless @game.in_play? %>
-  <%= button_to "Start the game already!", game_start_path(@game), method: :put %>
-<% end %>
+<div data-controller="game" data-game-id=<%= @game.id %>></div>
 
 <br>
 

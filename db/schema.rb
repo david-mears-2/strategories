@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_20_143939) do
+ActiveRecord::Schema.define(version: 2022_03_20_195623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 2022_03_20_143939) do
   create_table "entries", force: :cascade do |t|
     t.bigint "list_id"
     t.string "content"
-    t.boolean "valid"
+    t.boolean "approved"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["list_id"], name: "index_entries_on_list_id"
@@ -59,6 +59,8 @@ ActiveRecord::Schema.define(version: 2022_03_20_143939) do
     t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "started_at", precision: 6
+    t.text "category"
     t.index ["game_id"], name: "index_rounds_on_game_id"
     t.index ["rule_id"], name: "index_rounds_on_rule_id"
   end

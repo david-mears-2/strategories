@@ -1,8 +1,8 @@
 class GamesController < ApplicationController
   before_action :require_authentication, except: %i[index]
-  before_action :set_game, only: %i[show poll join leave start destroy add_round]
+  before_action :set_game, except: %i[index new create]
 
-  helper_method :am_the_host?
+  helper_method :am_the_host?, :list
 
   def index
     @games = Game.order(created_at: :desc).limit(10)
@@ -57,11 +57,33 @@ class GamesController < ApplicationController
   def add_round
     verify_json_request
 
-    @game.rotate_host
-
-    round = @game.rounds.new.save
+    @game.rounds.new(rule: Rule.all.sample, category: generate_category).save
 
     render_game
+  end
+
+  def start_round
+    verify_json_request
+
+    @game.current_round.start!
+
+    render_game
+  end
+
+  def change_round
+    verify_json_request
+
+    round = @game.current_round
+    round.rule = Rule.all.sample
+    round.category = generate_category
+    round.save
+
+    render_game
+  end
+
+  def add_list
+    new_list = @game.current_round.lists.new(list_entries_attributes.merge(user: current_user))
+    new_list.save
   end
 
   private
@@ -99,6 +121,30 @@ class GamesController < ApplicationController
   def render_game
     html = render_to_string("game", formats: [:html], locals: { game: @game }, layout: false)
 
-    render json: { html: html }
+    render json: { html: html, needs_current_players_list: needs_current_players_list? }
+  end
+
+  def generate_category
+    YAML.load_file(Rails.root.join("config/categories.yml"))["categories"].sample
+  end
+
+  def needs_current_players_list?
+    return false unless @game.current_round.present?
+
+    return true
+
+    @game.current_round.finished? && @game.current_round.lists.pluck(:user_id).exclude?(current_user.id)
+  end
+
+  def list
+    @game.current_round.lists.find_or_initialize_by(user: current_user)
+  end
+
+  def list_entries_attributes
+    { entries_attributes: entries_from_params.map { |content| { content: content } } }
+  end
+
+  def entries_from_params
+    JSON.parse(params.require(:entries))
   end
 end

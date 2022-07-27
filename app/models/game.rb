@@ -6,6 +6,8 @@ class Game < ApplicationRecord
 
   validates :code, uniqueness: true
 
+  enum status: %i[draft in_play finished]
+
   # This is the main intended interface for users
   # It returns users in a deterministic order
   def players
@@ -20,5 +22,7 @@ class Game < ApplicationRecord
     save
   end
 
-  enum status: %i[draft in_play finished]
+  def current_round
+    rounds.last
+  end
 end

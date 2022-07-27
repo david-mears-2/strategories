@@ -6,7 +6,10 @@ Rails.application.routes.draw do
     put "start", to: "games#start", as: :start
     get "poll", to: "games#poll", as: :poll
     delete "leave", to: "games#leave", as: :leave
-    put "add_round", to: "games#add_round", as: :add_round
+    put "add_round", to: "games#add_round"
+    put "change_round", to: "games#change_round"
+    put "start_round", to: "games#start_round"
+    put "add_list", to: "games#add_list"
   end
 
   resources :users

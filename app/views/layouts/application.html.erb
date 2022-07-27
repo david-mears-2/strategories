@@ -23,12 +23,12 @@
     
     <% if notice %>
       <p style="color: green">
-        <%= notice %> <span onclick="this.parentElement.remove()">x</span>
+        <%= notice %> <span class="closeX" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></span>
       </p>
     <% end %>
     <% if alert %>
       <p style="color: red">
-        <%= alert %> <span onclick="this.parentElement.remove()">x</span>
+        <%= alert %> <span class="closeX" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></span>
       </p>
     <% end %>
     <%= yield %>

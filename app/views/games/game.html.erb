@@ -10,7 +10,7 @@
       <li>
         <%= player.name %>
         <% if player == game.host %>
-          <i class="fa-solid fa-crown"></i> 
+          <sub>host <i class="fa-solid fa-crown"></i> </sub>
         <% end %>
       </li>
     <% end %>
@@ -22,17 +22,15 @@
 <hr>
 
 <% if game.in_play? %>
-  <% if game.rounds.any? %>
-      <p>Round <%= game.rounds.count %></p>
-  <% end %>
-  <% if am_the_host? %>
-    <% if (game.rounds.none? || game.rounds.last.finished?) %>
-      <button data-action="game#addRound">New round</button>
-    <% elsif game.rounds.last.draft? %>
-      <button data-action="game#startRound">Start round</button>
-    <% end %>
-  <% end %>
-<% else %>
+  <p id="timer">
+    <i class="fa-solid fa-stopwatch"></i>
+    <%= @game.current_round&.time_remaining %>
+  </p>
+<% end %>
+
+<% if game.in_play? %>
+  <%= render "round", round: game.current_round, game: game %>
+<% elsif am_the_host? %>
   <%= button_to "Start the game already!", game_start_path(game), method: :put %>
 <% end %>
 

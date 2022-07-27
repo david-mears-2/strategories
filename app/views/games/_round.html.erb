@@ -1,0 +1,31 @@
+<% if round.present? %>
+  <p>Round <%= game.rounds.count %> (<%= round.human_readable_status.downcase %>)</p>
+  <p>Category: <b style="color:blue"><%= round.category %></b></p>
+  <p><%= round.rule.name.humanize %>: <%= round.rule.description %></p>
+
+  <% if !round.draft? %>
+      <% round.rule.max_entries_per_list.times.with_index do |index| %>
+        <!-- value is fallback for refreshing the page (initial load of page) -->
+        <input type="<%= round.in_play? ? 'text' : 'hidden' %>" value="<%= list.entries[index] %>">
+      <% end %>
+  <% end%>
+  <% if round.finished? %>
+    <% round.lists.each do |list| %>
+      <p><%= list.player %> wrote:</p>
+      <ul>
+        <% list.entries.each do |entry| %>
+          <li><%= entry.content %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+<% end %>
+<% if am_the_host? %>
+  <% if (game.rounds.none? || round.finished?) %>
+    <button data-action="game#addRound">New round</button>
+  <% elsif round.draft? %>
+    <button data-action="game#changeRound">Regenerate</button>
+    <button data-action="game#startRound">Start round</button>
+  <% end %>
+<% end %>
+    

@@ -25,6 +25,24 @@ Looked into these and came across [some](https://stackoverflow.com/questions/606
 
 I'm going to start doing this app with short-polling just to get something up and working. I can try and refine short-polling to long-polling or even to something better later. I'll keep turbolinks switched off so that the short-polling stops when we navigate pages.
 
+### Set-up troubles
+
+I had this issue where bundle wasn't recognising the right Ruby version
+
+```
+> bundle
+Your Ruby version is 2.6.8, but your Gemfile specified 3.0.6
+
+> rbenv version
+3.0.6 (set by /Users/davidmears/projects/games/strategories/.ruby-version)
+```
+
+I got around it with:
+```
+> rbenv exec gem install bundler
+> rbenv exec bundle
+```
+
 
 
 

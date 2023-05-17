@@ -3,15 +3,16 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
     const gameContainer = this.element
+    const inputs = Array.from(document.getElementById('inputs').getElementsByTagName('input'))
     const csrfToken = this.getMetaValue("csrf-token")
     this.stopUpdatingPage = false
 
     setInterval(() => {
-      this.loadView(csrfToken, gameContainer)
+      this.loadView(csrfToken, gameContainer, inputs)
     }, 5000);
   }
 
-  loadView(csrfToken, gameContainer) {
+  loadView(csrfToken, gameContainer, inputs) {
     if ( this.stopUpdatingPage === true ) { // the purpose of this is so that error messages persist rather than being overwritten by the next poll
       return
     }
@@ -31,7 +32,7 @@ export default class extends Controller {
           console.log(true)
           console.log('sending list')
 
-          let entries = ['asdf', 'asdf', 'sdfg', 'dfgh']
+          let entries = inputs.map((el) => el.value).filter((el) => (el != ''))
 
           fetch(`/games/${gameContainer.dataset.gameId}/add_list.json?entries=${JSON.stringify(entries)}`,
             {
@@ -51,35 +52,13 @@ export default class extends Controller {
               }
             })
             .then(data => {
-              gameContainer.innerHTML = data.html;
+              this.updateHTML(gameContainer, inputs, data.html, data.list_length)
             })
         } else {
           console.log(false)
         }
 
-        let listElementOriginal = document.getElementById('list')
-        let values
-        let originallyActive
-        if (listElementOriginal) {
-          values = Array.from(listElementOriginal.children).map((entry, index) => {
-            if (entry === document.activeElement) {
-              originallyActive = index
-            }
-            return entry.value
-          })
-        };
-
-        gameContainer.innerHTML = data.html;
-
-        let listElementNew = document.getElementById('list')
-        if (listElementOriginal) {
-          values.map((val, index) => {
-            listElementNew.children[index].value = val
-            if (index === originallyActive) {
-              listElementNew.children[index].focus()
-            }
-          })
-        };
+        this.updateHTML(gameContainer, inputs, data.html, data.list_length)
       })
     }
 
@@ -125,12 +104,23 @@ export default class extends Controller {
         }
       })
       .then(data => {
-        gameContainer.innerHTML = data.html;
+        this.updateHTML(gameContainer, inputs, data.html, data.list_length)
       })
   }
 
   getMetaValue(name) {
     const element = document.head.querySelector(`meta[name="${name}"]`)
     return element.getAttribute("content")
+  }
+
+  updateHTML(gameContainer, inputs, html, listLength) {
+    gameContainer.innerHTML = html;
+
+    inputs.slice(0, listLength).forEach((input) => {
+      input.type = 'text'
+    })
+    inputs.slice(listLength).forEach((input) => {
+      input.type = 'hidden'
+    })
   }
 }

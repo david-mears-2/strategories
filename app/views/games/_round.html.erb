@@ -3,21 +3,15 @@
   <p>Category: <b style="color:blue"><%= round.category %></b></p>
   <p><%= round.rule.name.humanize %>: <%= round.rule.description %></p>
 
-  <% if !round.draft? %>
-      <% round.rule.max_entries_per_list.times.with_index do |index| %>
-        <!-- value is fallback for refreshing the page (initial load of page) -->
-        <input type="<%= round.in_play? ? 'text' : 'hidden' %>" value="<%= list.entries[index] %>">
-      <% end %>
-  <% end%>
   <% if round.finished? %>
     <% round.lists.each do |list| %>
       <div style="display: inline-block; margin-right: 10px;">
         <p><%= list.player.name %> wrote:</p>
-        <ul>
+        <ol>
           <% list.entries.each do |entry| %>
             <li><%= entry.content %></li>
           <% end %>
-        </ul>
+        </ol>
       </div>
     <% end %>
   <% end %>

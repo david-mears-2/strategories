@@ -129,7 +129,11 @@ class GamesController < ApplicationController
   def render_game
     html = render_to_string("game", formats: [:html], locals: { game: @game }, layout: false)
 
-    render json: { html: html, needs_to_collect_current_players_entries: needs_to_collect_current_players_entries? }
+    render json: {
+      html: html,
+      list_length: list_length,
+      needs_to_collect_current_players_entries: needs_to_collect_current_players_entries?,
+    }
   end
 
   def generate_category
@@ -152,5 +156,11 @@ class GamesController < ApplicationController
 
   def entries_from_params
     JSON.parse(params.require(:entries))
+  end
+
+  def list_length
+    @game.current_round&.in_play? ?
+      @game.current_round.rule&.max_entries_per_list&.to_i
+      : 0
   end
 end

@@ -5,6 +5,10 @@ rbenv install <version>
 bundle install
 
 bundle exec rake db:create
+
+bundle exec rake db:migrate
+
+bundle exec rake db:seed
 ## WebSockets
 
 I'm getting the vibe that actioncable/websockets are not going to play nice with Turbo(links): https://stackoverflow.com/questions/38649550/rails-how-to-disable-turbolinks-in-rails-5

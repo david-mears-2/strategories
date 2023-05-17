@@ -3,76 +3,85 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
     const gameContainer = this.element
-    const endpoint = `/games/${gameContainer.dataset.gameId}/poll`
     const csrfToken = this.getMetaValue("csrf-token")
+    this.stopUpdatingPage = false
 
-    setInterval(function () {
-      // Seems that `this` stops referring to the stimulus controller inside here
-      fetch(endpoint)
-        .then(response => {
-          if (!response.ok) {
-            console.log(response)
-            return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
-          } else {
-            return response.json()
-          }
-        })
-        .then(data => {
-          if (data.needs_current_players_list === true) {
-            console.log(true)
-            console.log('sending list')
-
-            let entries = ['asdf', 'asdf', 'sdfg', 'dfgh']
-
-            fetch(`/games/${gameContainer.dataset.gameId}/add_list.json?entries=${JSON.stringify(entries)}`,
-              {
-                method: 'PUT',
-                credentials: "same-origin",
-                headers: {
-                  "X-CSRF-Token": csrfToken
-                },
-              })
-              .then(response => {
-                if (!response.ok) {
-                  console.log(response)
-                  return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
-                } else {
-                  return response.json()
-                }
-              })
-              .then(data => {
-                gameContainer.innerHTML = data.html;
-              })
-          } else {
-            console.log(false)
-          }
-
-          let listElementOriginal = document.getElementById('list')
-          let values
-          let originallyActive
-          if (listElementOriginal) {
-            values = Array.from(listElementOriginal.children).map((entry, index) => {
-              if (entry === document.activeElement) {
-                originallyActive = index
-              }
-              return entry.value
-            })
-          };
-
-          gameContainer.innerHTML = data.html;
-          
-          let listElementNew = document.getElementById('list')
-          if (listElementOriginal) {
-            values.map((val, index) => {
-              listElementNew.children[index].value = val
-              if (index === originallyActive) {
-                listElementNew.children[index].focus()
-              }
-            })
-          };
-        })
-      }, 5000);
+    setInterval(() => {
+      this.loadView(csrfToken, gameContainer)
+    }, 5000);
   }
+
+  loadView(csrfToken, gameContainer) {
+    if ( this.stopUpdatingPage === true ) { // the purpose of this is so that error messages persist rather than being overwritten by the next poll
+      return
+    }
+    this.stopUpdatingPage = true;
+    fetch(`/games/${gameContainer.dataset.gameId}/poll`)
+      .then(response => {
+        if (!response.ok) {
+          console.log(response)
+          return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
+        } else {
+          this.stopUpdatingPage = false;
+          return response.json()
+        }
+      })
+      .then(data => {
+        if (data.needs_to_collect_current_players_entries === true) {
+          console.log(true)
+          console.log('sending list')
+
+          let entries = ['asdf', 'asdf', 'sdfg', 'dfgh']
+
+          fetch(`/games/${gameContainer.dataset.gameId}/add_list.json?entries=${JSON.stringify(entries)}`,
+            {
+              method: 'PUT',
+              credentials: "same-origin",
+              headers: {
+                "X-CSRF-Token": csrfToken
+              },
+            })
+            .then(response => {
+              if (!response.ok) {
+                console.log(response)
+                return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
+              } else {
+                this.stopUpdatingPage = false;
+                return response.json()
+              }
+            })
+            .then(data => {
+              gameContainer.innerHTML = data.html;
+            })
+        } else {
+          console.log(false)
+        }
+
+        let listElementOriginal = document.getElementById('list')
+        let values
+        let originallyActive
+        if (listElementOriginal) {
+          values = Array.from(listElementOriginal.children).map((entry, index) => {
+            if (entry === document.activeElement) {
+              originallyActive = index
+            }
+            return entry.value
+          })
+        };
+
+        gameContainer.innerHTML = data.html;
+
+        let listElementNew = document.getElementById('list')
+        if (listElementOriginal) {
+          values.map((val, index) => {
+            listElementNew.children[index].value = val
+            if (index === originallyActive) {
+              listElementNew.children[index].focus()
+            }
+          })
+        };
+      })
+    }
 
   addRound(event) {
     this.doAction('add_round', event)
@@ -89,6 +98,8 @@ export default class extends Controller {
   }
 
   doAction(action, event) {
+    this.stopUpdatingPage = true
+
     console.log(action)
 
     event.target.disabled = true;
@@ -109,6 +120,7 @@ export default class extends Controller {
           console.log(response)
           return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
         } else {
+          this.stopUpdatingPage = false;
           return response.json()
         }
       })

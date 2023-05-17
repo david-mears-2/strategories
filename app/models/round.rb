@@ -37,6 +37,6 @@ class Round < ApplicationRecord
 
     mark_as_finished! if time_left.negative?
 
-    time_left.to_i
+    [time_left.to_i, 0].max
   end
 end

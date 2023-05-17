@@ -1,16 +1,16 @@
 class List < ApplicationRecord
   belongs_to :round
-  belongs_to :user
+  belongs_to :player, class_name: "User", foreign_key: "user_id"
 
   has_many :entries
 
   accepts_nested_attributes_for :entries
 
-  validate :unique_to_round_and_user
+  validate :unique_to_round_and_player
 
-  def unique_to_round_and_user
-    return unless List.where(user: user, round: round)
+  def unique_to_round_and_player
+    return unless List.where(player: player, round: round).any?
 
-    errors.add(:user, "Already submitted a list for this round")
+    errors.add(:player, "Already submitted a list for this round")
   end
 end

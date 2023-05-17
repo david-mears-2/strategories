@@ -57,9 +57,11 @@ class GamesController < ApplicationController
   def add_round
     verify_json_request
 
-    @game.rounds.new(rule: Rule.all.sample, category: generate_category).save
-
-    render_game
+    if @game.rounds.new(rule: Rule.all.sample, category: generate_category).save
+      render_game
+    else
+      render json: @game.errors, status: :unprocessable_entity
+    end
   end
 
   def start_round
@@ -82,8 +84,14 @@ class GamesController < ApplicationController
   end
 
   def add_list
-    new_list = @game.current_round.lists.new(list_entries_attributes.merge(user: current_user))
-    new_list.save
+    verify_json_request
+
+    new_list = @game.current_round.lists.new(list_entries_attributes.merge(player: current_user))
+    if new_list.save
+      render_game
+    else
+      render json: new_list.errors, status: :unprocessable_entity
+    end
   end
 
   private
@@ -121,23 +129,21 @@ class GamesController < ApplicationController
   def render_game
     html = render_to_string("game", formats: [:html], locals: { game: @game }, layout: false)
 
-    render json: { html: html, needs_current_players_list: needs_current_players_list? }
+    render json: { html: html, needs_to_collect_current_players_entries: needs_to_collect_current_players_entries? }
   end
 
   def generate_category
     YAML.load_file(Rails.root.join("config/categories.yml"))["categories"].sample
   end
 
-  def needs_current_players_list?
+  def needs_to_collect_current_players_entries?
     return false unless @game.current_round.present?
-
-    return true
 
     @game.current_round.finished? && @game.current_round.lists.pluck(:user_id).exclude?(current_user.id)
   end
 
   def list
-    @game.current_round.lists.find_or_initialize_by(user: current_user)
+    @game.current_round.lists.find_or_initialize_by(user_id: current_user.id)
   end
 
   def list_entries_attributes

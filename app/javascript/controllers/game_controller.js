@@ -9,7 +9,7 @@ export default class extends Controller {
 
     setInterval(() => {
       this.loadView(csrfToken, gameContainer, inputs)
-    }, 5000);
+    }, 500);
   }
 
   loadView(csrfToken, gameContainer, inputs) {

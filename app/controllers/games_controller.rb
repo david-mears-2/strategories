@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/ClassLength
 class GamesController < ApplicationController
   before_action :require_authentication, except: %i[index]
   before_action :set_game, except: %i[index new create]
@@ -94,6 +95,17 @@ class GamesController < ApplicationController
     end
   end
 
+  def reveal_next_list
+    next_list = @game.current_round.lists_in_order.where(revealed: false).first
+    next_list.revealed = true
+
+    if next_list.save
+      render_game
+    else
+      render json: next_list.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_game
@@ -130,9 +142,9 @@ class GamesController < ApplicationController
     html = render_to_string("game", formats: [:html], locals: { game: @game }, layout: false)
 
     render json: {
-      html: html,
-      list_length: list_length,
-      needs_to_collect_current_players_entries: needs_to_collect_current_players_entries?,
+      html:,
+      list_length:,
+      needs_to_collect_current_players_entries: needs_to_collect_current_players_entries?
     }
   end
 
@@ -151,7 +163,7 @@ class GamesController < ApplicationController
   end
 
   def list_entries_attributes
-    { entries_attributes: entries_from_params.map { |content| { content: content } } }
+    { entries_attributes: entries_from_params.map { |content| { content: } } }
   end
 
   def entries_from_params
@@ -159,8 +171,10 @@ class GamesController < ApplicationController
   end
 
   def list_length
-    @game.current_round&.in_play? ?
+    if @game.current_round&.in_play?
       @game.current_round.rule&.max_entries_per_list&.to_i
-      : 0
+    else
+      0
+    end
   end
 end

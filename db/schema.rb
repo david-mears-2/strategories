@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_20_195623) do
-
+ActiveRecord::Schema[7.0].define(version: 2023_05_18_140215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,15 +18,15 @@ ActiveRecord::Schema.define(version: 2022_03_20_195623) do
     t.bigint "list_id"
     t.string "content"
     t.boolean "approved"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["list_id"], name: "index_entries_on_list_id"
   end
 
   create_table "games", force: :cascade do |t|
     t.string "code"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "status", default: 0
     t.bigint "host_id"
     t.index ["host_id"], name: "index_games_on_host_id"
@@ -37,8 +36,9 @@ ActiveRecord::Schema.define(version: 2022_03_20_195623) do
     t.bigint "round_id"
     t.bigint "user_id"
     t.integer "points"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "revealed", default: false
     t.index ["round_id"], name: "index_lists_on_round_id"
     t.index ["user_id"], name: "index_lists_on_user_id"
   end
@@ -47,8 +47,8 @@ ActiveRecord::Schema.define(version: 2022_03_20_195623) do
     t.bigint "game_id"
     t.bigint "user_id"
     t.integer "points", default: 0
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["game_id"], name: "index_participations_on_game_id"
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
@@ -57,9 +57,9 @@ ActiveRecord::Schema.define(version: 2022_03_20_195623) do
     t.bigint "game_id"
     t.bigint "rule_id"
     t.integer "status", default: 0
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "started_at", precision: 6
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "started_at"
     t.text "category"
     t.index ["game_id"], name: "index_rounds_on_game_id"
     t.index ["rule_id"], name: "index_rounds_on_rule_id"
@@ -69,22 +69,22 @@ ActiveRecord::Schema.define(version: 2022_03_20_195623) do
     t.string "name"
     t.text "description"
     t.integer "max_entries_per_list"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "votes", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "entry_id"
     t.boolean "in_favour"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["entry_id"], name: "index_votes_on_entry_id"
     t.index ["user_id"], name: "index_votes_on_user_id"
   end

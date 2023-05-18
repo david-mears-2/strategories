@@ -28,7 +28,7 @@ class Round < ApplicationRecord
   end
 
   def time_remaining
-    return "" unless started_at
+    return unless started_at
     return 0 if finished?
 
     finishes_at = started_at + MAX_TIME
@@ -38,5 +38,9 @@ class Round < ApplicationRecord
     mark_as_finished! if time_left.negative?
 
     [time_left.to_i, 0].max
+  end
+
+  def lists_in_order
+    lists.order(:created_at)
   end
 end

@@ -1,6 +1,6 @@
 <p>
   <strong>Code:</strong>
-  <%= @game.code %>
+  <%= game.code %>
 </p>
 
 <p>Playing:</p>
@@ -21,10 +21,10 @@
 
 <hr>
 
-<% if game.in_play? %>
+<% if game.in_play? && game.current_round&.time_remaining&.positive? %>
   <p id="timer">
     <i class="fa-solid fa-stopwatch"></i>
-    <%= @game.current_round&.time_remaining %>
+    <%= game.current_round&.time_remaining %>
   </p>
 <% end %>
 

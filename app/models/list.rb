@@ -6,10 +6,10 @@ class List < ApplicationRecord
 
   accepts_nested_attributes_for :entries
 
-  validate :unique_to_round_and_player
+  validate :unique_to_round_and_player, on: :create
 
   def unique_to_round_and_player
-    return unless List.where(player: player, round: round).any?
+    return unless List.where(player:, round:).any?
 
     errors.add(:player, "Already submitted a list for this round")
   end

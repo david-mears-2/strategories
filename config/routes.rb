@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     put "change_round", to: "games#change_round"
     put "start_round", to: "games#start_round"
     put "add_list", to: "games#add_list"
+    put "reveal_next_list", to: "games#reveal_next_list"
   end
 
   resources :users

@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   connect() {
     const gameContainer = this.element
-    const inputs = Array.from(document.getElementById('inputs').getElementsByTagName('input'))
+    const inputs = this.getInputFields()
     const csrfToken = this.getMetaValue("csrf-token")
     this.stopUpdatingPage = false
 
@@ -29,36 +29,10 @@ export default class extends Controller {
       })
       .then(data => {
         if (data.needs_to_collect_current_players_entries === true) {
-          console.log(true)
-          console.log('sending list')
-
-          let entries = inputs.map((el) => el.value).filter((el) => (el != ''))
-
-          fetch(`/games/${gameContainer.dataset.gameId}/add_list.json?entries=${JSON.stringify(entries)}`,
-            {
-              method: 'PUT',
-              credentials: "same-origin",
-              headers: {
-                "X-CSRF-Token": csrfToken
-              },
-            })
-            .then(response => {
-              if (!response.ok) {
-                console.log(response)
-                return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
-              } else {
-                this.stopUpdatingPage = false;
-                return response.json()
-              }
-            })
-            .then(data => {
-              this.updateHTML(gameContainer, inputs, data.html, data.list_length)
-            })
+          this.sendList(gameContainer, inputs, csrfToken)
         } else {
-          console.log(false)
+          this.updateHTML(gameContainer, inputs, data.html, data.list_length)
         }
-
-        this.updateHTML(gameContainer, inputs, data.html, data.list_length)
       })
     }
 
@@ -71,16 +45,15 @@ export default class extends Controller {
   }
 
   startRound(event) {
-    console.log('trying to start')
-
     this.doAction('start_round', event)
+  }
+
+  revealNextList(event) {
+    this.doAction('reveal_next_list', event)
   }
 
   doAction(action, event) {
     this.stopUpdatingPage = true
-
-    console.log(action)
-
     event.target.disabled = true;
     const gameContainer = this.element
 
@@ -104,6 +77,33 @@ export default class extends Controller {
         }
       })
       .then(data => {
+        inputs = this.getInputFields()
+        this.updateHTML(gameContainer, inputs, data.html, data.list_length)
+      })
+  }
+
+  sendList(gameContainer, inputs, csrfToken) {
+    let entries = inputs.map((el) => el.value).filter((el) => (el != ''))
+
+    fetch(`/games/${gameContainer.dataset.gameId}/add_list.json?entries=${JSON.stringify(entries)}`,
+      {
+        method: 'PUT',
+        credentials: "same-origin",
+        headers: {
+          "X-CSRF-Token": csrfToken
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.log(response)
+          return { html: `<p>There was a bally error :-( Try refreshing?</p><p>${response.statusText}</p>` }
+        } else {
+          this.stopUpdatingPage = false;
+          return response.json()
+        }
+      })
+      .then(data => {
+        inputs.map((el) => { el.value = '' })
         this.updateHTML(gameContainer, inputs, data.html, data.list_length)
       })
   }
@@ -122,5 +122,9 @@ export default class extends Controller {
     inputs.slice(listLength).forEach((input) => {
       input.type = 'hidden'
     })
+  }
+
+  getInputFields() {
+    return Array.from(document.getElementById('inputs').getElementsByTagName('input'))
   }
 }

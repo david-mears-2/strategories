@@ -14,13 +14,13 @@
   <body>
     <div id="auth-div">
       <% if current_user.present? %>
-        <p>Player: <b><%= link_to current_user.name, user_path(current_user) %></b></p>
-        <%= button_to "Sign out", destroy_session_path, method: :delete %>
+        <i class="fa fa-user-circle" style="color: <%= current_user.color %>" aria-hidden="true"></i> <b><%= link_to current_user.name, user_path(current_user) %></b>
+        <%= button_to "Sign out", destroy_session_path, method: :delete, form: { "style": "display: inline-block; float: right" } %>
       <% else %>
         <%= link_to "Sign in", new_session_path %>
       <% end %>
     </div>
-    
+
     <% if notice %>
       <p style="color: green">
         <%= notice %> <span class="closeX" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></span>

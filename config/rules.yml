@@ -1,5 +1,6 @@
 # Keep rule info in here (converted to table record when seeds.rb is run) for ease of
 # editing and reference.
+# NB Do not change the spelling of names here as some logic depends on them
 - name: "one-on-one"
   description: "Get a point for each word you write that was also written by exactly one other player."
   max_entries_per_list: 10

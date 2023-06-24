@@ -92,6 +92,9 @@ GEM
     diff-lcs (1.5.0)
     e2mmap (0.1.0)
     erubi (1.10.0)
+    ffi (1.15.5)
+    font-awesome-sass (6.4.0)
+      sassc (~> 2.0)
     globalid (1.1.0)
       activesupport (>= 5.0)
     i18n (1.8.11)
@@ -218,6 +221,8 @@ GEM
       rubocop (~> 1.19)
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
+    sassc (2.4.0)
+      ffi (~> 1.9)
     selenium-webdriver (4.1.0)
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -280,6 +285,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   capybara
+  font-awesome-sass
   importmap-rails
   jbuilder
   pg (~> 1.5)

@@ -1,43 +1,43 @@
+<% if am_the_host? && (game.rounds.none? || round.finished?) %>
+  <button data-action="game#addRound">New round</button>
+<% end %>
+
 <% if round.present? %>
-  <p>Round <%= game.rounds.count %> (<%= round.human_readable_status.downcase %>)</p>
+  <p><b>Round <%= game.rounds.count %></b> (<%= round.human_readable_status.downcase %>)</p>
   <p>Category: <b style="color:blue"><%= round.category %></b></p>
   <p><%= round.rule.name.humanize %>: <%= round.rule.description %></p>
 
   <% if round.finished? %>
-    <% reveal_button_has_been_shown = false %>
-    <% round.lists_in_order.each do |list| %>
+    <% if !am_the_host? && round.lists.none?(&:revealed?) %>
+      <p><i>Waiting for host <%= game.host.name %> to reveal the submissions...</i></p>
+    <% end %>
+    <% reveal_button_has_been_shown = false; round.lists_in_order.each do |list| %>
       <div style="display: inline-block; margin-right: 10px; vertical-align: top;">
-        <p><%= list.player.name %> wrote:</p>
         <% if list.revealed? %>
-          <% if round.rule.max_entries_per_list == 1 %>
-            <%= list.entries.first.content %>
-          <% else %>
-            <ol>
-              <% list.entries.each do |entry| %>
-                <li><%= entry.content %></li>
-              <% end %>
-            </ol>
+          <p>
+            <i class="fa fa-user-circle" style="color: <%= list.player.color %>" aria-hidden="true"></i>
+            <%= list.player.name %> wrote:
+          </p>
+          <% list.words.each do |word| %>
+            <%= word %><br/>
+          <% end %>
+          <% if round.lists.all?(&:revealed?) %>
+            <p>Score: <%= list.points %></p>
           <% end %>
         <% elsif am_the_host? && !reveal_button_has_been_shown %>
+          <p>
+            <i class="fa fa-user-circle" style="color: <%= list.player.color %>" aria-hidden="true"></i>
+            <%= list.player.name %> wrote:
+          </p>
           <button data-action="game#revealNextList">Reveal</button>
           <% reveal_button_has_been_shown = true %>
         <% end %>
       </div>
     <% end %>
-    <% if round.lists_in_order.all?(&:revealed?) %>
-      <h3>Scores</h3>
-      <% round.lists_in_order.each do |list| %>
-        <p><%= list.player.name %>: <%= list.points %></p>
-      <% end %>
-    <% end %>
   <% end %>
 <% end %>
-<% if am_the_host? %>
-  <% if (game.rounds.none? || round.finished?) %>
-    <button data-action="game#addRound">New round</button>
-  <% elsif round.draft? %>
-    <button data-action="game#changeRound">Regenerate</button>
-    <button data-action="game#startRound">Start round</button>
-  <% end %>
+<br/><br/>
+<% if am_the_host? && round&.draft? %>
+  <button data-action="game#changeRound">Regenerate</button>
+  <button data-action="game#startRound">Start round</button>
 <% end %>
-

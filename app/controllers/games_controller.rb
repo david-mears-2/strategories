@@ -89,6 +89,7 @@ class GamesController < ApplicationController
 
     new_list = @game.current_round.lists.new(list_entries_attributes.merge(player: current_user))
     if new_list.save
+      @game.current_round.calculate_points if @game.current_round.lists.count == @game.players.count
       render_game
     else
       render json: new_list.errors, status: :unprocessable_entity

@@ -24,7 +24,7 @@ class UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to user_url(@user), notice: "Account successfully updated."
+      redirect_to user_url(@user), notice: "Profile successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
     @user.destroy
     session.destroy
 
-    redirect_to root_path, notice: "Account successfully destroyed."
+    redirect_to root_path, notice: "Profile successfully destroyed."
   end
 
   private
@@ -44,7 +44,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name)
+    params.require(:user).permit(:name, :color)
   end
 
   def require_authorization

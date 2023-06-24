@@ -5,16 +5,20 @@
 
 <p>Playing:</p>
 <% if game.players.any? %>
-  <ol>
+  <ul style="list-style-type: none;">
     <% game.players.each do |player| %>
       <li>
+        <i class="fa fa-user-circle" style="color: <%= player.color %>" aria-hidden="true"></i>
         <%= player.name %>
         <% if player == game.host %>
           <sub>host <i class="fa-solid fa-crown"></i> </sub>
         <% end %>
+        <% if game.in_play? && (!game.current_round&.finished? || game.current_round&.lists&.all?(&:revealed?)) %>
+          <%= " (#{player.score(game)} points)" %>
+        <% end %>
       </li>
     <% end %>
-  </ol>
+  </ul>
 <% else %>
   <p>noone yet!</p>
 <% end %>
@@ -37,7 +41,7 @@
 <hr>
 
 <% if current_user.in?(game.players) %>
-  <%= button_to "Leave game", game_leave_path(game), method: :delete %>
+  <%= button_to "Leave game", game_leave_path(game), method: :delete, form: { style: "float: right" } %>
 <% else %>
   <%= button_to "Join game", game_join_path(game), method: :put %>
 <% end %>

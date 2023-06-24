@@ -14,9 +14,11 @@
   <div>
     <%= form.label :name, style: "display: block" %>
     <%= form.text_field :name %>
+    <%= form.label :color, style: "display: block" %>
+    <%= form.color_field :color, value:  user.color %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div style="margin-top: 1rem;">
+    <%= form.submit "Update #{user.name}" %>
   </div>
 <% end %>
